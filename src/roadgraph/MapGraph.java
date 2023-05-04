@@ -9,6 +9,10 @@ package roadgraph;
 
 
 import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -23,15 +27,15 @@ import util.GraphLoader;
  *
  */
 public class MapGraph {
-	//TODO: Add your member variables here in WEEK 3
 	
+	private Map<GeographicPoint, MapNode> vertices;
 	
 	/** 
 	 * Create a new empty MapGraph 
 	 */
 	public MapGraph()
 	{
-		// TODO: Implement in this constructor in WEEK 3
+		this.vertices = new HashMap<GeographicPoint, MapNode>();
 	}
 	
 	/**
@@ -40,8 +44,7 @@ public class MapGraph {
 	 */
 	public int getNumVertices()
 	{
-		//TODO: Implement this method in WEEK 3
-		return 0;
+		return vertices.size();
 	}
 	
 	/**
@@ -50,8 +53,9 @@ public class MapGraph {
 	 */
 	public Set<GeographicPoint> getVertices()
 	{
-		//TODO: Implement this method in WEEK 3
-		return null;
+		Set<GeographicPoint> vSet = new HashSet<GeographicPoint>();
+		vSet.addAll(vertices.keySet());
+		return vSet;
 	}
 	
 	/**
@@ -60,8 +64,13 @@ public class MapGraph {
 	 */
 	public int getNumEdges()
 	{
-		//TODO: Implement this method in WEEK 3
-		return 0;
+		int edges = 0;
+		for(GeographicPoint p : vertices.keySet()) {
+			MapNode node = vertices.get(p);
+			
+			edges += node.getNeighbours().size();
+		}
+		return edges;
 	}
 
 	
@@ -75,8 +84,12 @@ public class MapGraph {
 	 */
 	public boolean addVertex(GeographicPoint location)
 	{
-		// TODO: Implement this method in WEEK 3
-		return false;
+		if(location == null || vertices.containsKey(location)) {
+			return false;
+		}
+		
+		vertices.put(location, new MapNode(location, new ArrayList<>()));
+		return true;
 	}
 	
 	/**
@@ -94,7 +107,7 @@ public class MapGraph {
 	public void addEdge(GeographicPoint from, GeographicPoint to, String roadName,
 			String roadType, double length) throws IllegalArgumentException {
 
-		//TODO: Implement this method in WEEK 3
+		MapEdge fromEdge = new MapEdge(from, to, roadName, roadType, length);
 		
 	}
 	
