@@ -3,13 +3,14 @@ package roadgraph;
 import geography.GeographicPoint;
 
 public class MapEdge {
-	private GeographicPoint from;
-	private GeographicPoint to;
+	private MapNode from;
+	private MapNode to;
 	private String roadName;
 	private String roadType;
 	private double distance;
 
-	public MapEdge(GeographicPoint from, GeographicPoint to, String roadName, String roadType, double distance) {
+	public MapEdge(MapNode from, MapNode to, String roadName, String roadType, double distance) {
+		super();
 		this.from = from;
 		this.to = to;
 		this.roadName = roadName;
@@ -17,44 +18,42 @@ public class MapEdge {
 		this.distance = distance;
 	}
 
-	public GeographicPoint getStart() {
+	public MapNode getFrom() {
 		return from;
 	}
 
-	public void setStart(GeographicPoint from) {
-		this.from = from;
-	}
-
-	public GeographicPoint getEnd() {
+	public MapNode getTo() {
 		return to;
 	}
 
-	public void setEnd(GeographicPoint to) {
-		this.to = to;
+	public GeographicPoint getFromLoc() {
+		return from.getLocation();
+	}
+
+	public GeographicPoint getToLoc() {
+		return to.getLocation();
 	}
 
 	public String getRoadName() {
 		return roadName;
 	}
 
-	public void setRoadName(String roadName) {
-		this.roadName = roadName;
-	}
-
 	public String getRoadType() {
 		return roadType;
-	}
-
-	public void setRoadType(String roadType) {
-		this.roadType = roadType;
 	}
 
 	public double getDistance() {
 		return distance;
 	}
 
-	public void setDistance(double distance) {
-		this.distance = distance;
+	public MapNode getOtherNode(MapNode node) {
+		if (node.equals(to)) {
+			return from;
+		} else if (node.equals(from)) {
+			return to;
+		} else {
+			throw new IllegalArgumentException("Invalid node");
+		}
 	}
 
 }

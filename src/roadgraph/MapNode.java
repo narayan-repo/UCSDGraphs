@@ -1,34 +1,51 @@
 package roadgraph;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import geography.GeographicPoint;
 
 public class MapNode {
-	
+
 	private GeographicPoint location;
-	private List<MapEdge> neighbours;
-	
-	public MapNode(GeographicPoint location, List<MapEdge> neighbours) {
+	private HashSet<MapEdge> edges;
+
+	public MapNode(GeographicPoint location) {
 		super();
 		this.location = location;
-		this.neighbours = neighbours;
+		this.edges = new HashSet<MapEdge>();
 	}
 
 	public GeographicPoint getLocation() {
 		return location;
 	}
 
-	public void setLocation(GeographicPoint location) {
-		this.location = location;
-	}
+	public Set<MapNode> getNeighbours() {
+		Set<MapNode> neighbours = new HashSet<MapNode>();
+		for (MapEdge e : edges) {
+			neighbours.add(e.getOtherNode(this));
+		}
 
-	public List<MapEdge> getNeighbours() {
 		return neighbours;
 	}
 
-	public void setNeighbours(List<MapEdge> neighbours) {
-		this.neighbours = neighbours;
+	public void addEdge(MapEdge edge) {
+		edges.add(edge);
 	}
-	
+
+	public Set<MapEdge> getEdges() {
+		return edges;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof MapNode) || o == null)
+			return false;
+
+		MapNode node = (MapNode) o;
+
+		return this.location.equals(node.location);
+	}
+
 }
