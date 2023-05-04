@@ -9,8 +9,10 @@ package roadgraph;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -140,12 +142,76 @@ public class MapGraph {
 	 */
 	public List<GeographicPoint> bfs(GeographicPoint start, GeographicPoint goal,
 			Consumer<GeographicPoint> nodeSearched) {
-		// TODO: Implement this method in WEEK 3
 
-		// Hook for visualization. See writeup.
-		// nodeSearched.accept(next.getLocation());
+		if (!checkLocationValidity(start, goal)) {
+			return null;
+		}
 
-		return null;
+		Queue<MapNode> queue = new LinkedList<MapNode>();
+		Set<MapNode> visited = new HashSet<MapNode>();
+		HashMap<MapNode, MapNode> parent = new HashMap<>();
+
+		MapNode startNode = vertices.get(start);
+		MapNode goalNode = vertices.get(goal);
+		MapNode next = null;
+
+		queue.add(startNode);
+		visited.add(startNode);
+
+		while (!queue.isEmpty()) {
+
+			next = queue.remove();
+
+			nodeSearched.accept(next.getLocation());
+
+			if (next.equals(goalNode)) {
+				break;
+			}
+
+			for (MapNode neighbour : next.getNeighbours()) {
+				if (!visited.contains(neighbour)) {
+					visited.add(neighbour);
+					parent.put(neighbour, next);
+					queue.add(neighbour);
+				}
+			}
+		}
+		return reconstructPath(parent, startNode, goalNode, next.equals(goalNode));
+
+	}
+
+	private List<GeographicPoint> reconstructPath(HashMap<MapNode, MapNode> parent, MapNode startNode, MapNode goalNode,
+			boolean pathAvailable) {
+
+		if (!pathAvailable) {
+			System.out.println("No Path available");
+			return null;
+		}
+
+		LinkedList<GeographicPoint> route = new LinkedList<GeographicPoint>();
+		MapNode current = goalNode;
+
+		while (!current.equals(startNode)) {
+			route.addFirst(current.getLocation());
+			current = parent.get(current);
+		}
+
+		route.addFirst(startNode.getLocation());
+		return route;
+	}
+
+	private boolean checkLocationValidity(GeographicPoint p1, GeographicPoint p2) {
+
+		if (p1 == null || p2 == null) {
+			throw new NullPointerException("Start or Goal node is null");
+		}
+
+		if (vertices.get(p1) == null || vertices.get(p2) == null) {
+			System.out.println("Start node or Goal node doesn't exist");
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
